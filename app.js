@@ -13,12 +13,12 @@ function addItem(state, item){
 //delete function
 function deleteItem(state,item){
 	//checks if the element ur deleting is in array
-	
-	if(findItemIndex(state.item) >=0 ){
-		state.items.splice(findItemIndex(state.item),1);
+
+	if(findItemIndex(state,item) !== -1 ){
+		state.items.splice(findItemIndex(state,item),1);
 	}
 	//return new array after deletion
-
+	//console.log(state.items.splice(findItemIndex(state,item),1));
 	return state.items;
 }
 
@@ -36,6 +36,13 @@ function findItemIndex(state, item){
 	return state.items.findIndex(element =>element.item.trim() === item.trim());
 }
 
+//TEST
+// state.items.push({item:'stupido',completed:true},{item:'lol',completed:false});
+// console.log("what"+findItemIndex(state,'lol'));
+// console.log("ji"+state.items);
+// console.log("splice"+state.items.splice(findItemIndex(state,'lol'),1));
+// console.log("deleteItem"+ deleteItem(state,'stupido'));
+// console.log("items"+state.items);
 //finds item
 function findItem(state, item) {
 	return state.items.find(element =>element.item.trim() === item.trim());
@@ -52,10 +59,7 @@ function addRemCheck(state,item,element){
 		element.removeClass('shopping-item__checked');
 	}
 }
-//delete
-function renderDelete(state,element){
-	element.remove();
-}
+
 
 //add
 function renderList(state,element){
@@ -73,7 +77,10 @@ function renderList(state,element){
       	</li>`);
 	element.html(arr);
 }
-
+//delete
+function renderDelete(state,element){
+	element.remove();
+}
 //event listeners
 function addItemToList(state){
 	$("#js-shopping-list-form").on('submit',function(event){
