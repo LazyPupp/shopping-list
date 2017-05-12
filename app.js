@@ -11,49 +11,51 @@ function addItem(state, item){
 	return state.items;
 }
 //delete function
-function deleteItem(){
-
-}
-
-function checkItem(state,item,element){
-	let isCompleted = findItem(state,item).completed;
-	if(isCompleted) {
-		element.removeClass('shopping-item__checked');
-		isCompleted=false;
-		console.log("WHAT IS HAPPENING");
-	} else {
-		element.addClass('shopping-item__checked');
-		isCompleted=true;
-		console.log("HEY"+ isCompleted);
+function deleteItem(state,item){
+	//checks if the element ur deleting is in array
+	
+	if(findItemIndex(state.item) >=0 ){
+		state.items.splice(findItemIndex(state.item),1);
 	}
-	return isCompleted;
+	//return new array after deletion
+
+	return state.items;
 }
 
-
+function checkItem(state,item){
+	let itemFinder = findItem(state,item);
+	if(itemFinder.completed){
+		itemFinder.completed=false;
+	} else {
+		itemFinder.completed=true;
+	}
+	return itemFinder.completed;
+}
+//find item index
+function findItemIndex(state, item){
+	return state.items.findIndex(element =>element.item.trim() === item.trim());
+}
 
 //finds item
 function findItem(state, item) {
 	return state.items.find(element =>element.item.trim() === item.trim());
 }
 
-//check
-// function checkCompleted(state, element,item){
-// 	state.items.find(el=>el===item).completed ? 
-// }
-
 //render state
-//adding class
+//adding class and remove class
 
-/*function checkClass(element) {
-	element.addClass('shopping-item_checked');
+function addRemCheck(state,item,element){
+	if(checkItem(state,item)) {
+		element.addClass('shopping-item__checked');
+	
+	} else {
+		element.removeClass('shopping-item__checked');
+	}
 }
-
-//removing the class
-function uncheckClass(element){
-	element.removeClass('shopping-item_checked');
-}*/
-
-
+//delete
+function renderDelete(state,element){
+	element.remove();
+}
 
 //add
 function renderList(state,element){
@@ -85,12 +87,22 @@ function checkingList(state){
 	$('.shopping-list').on('click', '.shopping-item-toggle .button-label', function(event){
 		event.stopPropagation();
 		const item = $(this).closest('li').find('.shopping-item');
-		console.log(item.text());
-		console.log(checkItem(state,item.text(),item));
+		addRemCheck(state,item.text(),item);
+	});
+}
+function deleteItemFromList(state){
+	$('.shopping-list').on('click','.shopping-item-delete .button-label', function(event){
+		event.stopPropagation();
+		const list = $(this).closest('li');
+		deleteItem(state,list.find('.shopping-item').text());
+		renderDelete(state,list);
+
 	});
 }
 //callback function
 $(function(){
 	addItemToList(state);
 	checkingList(state);
+	deleteItemFromList(state);
+	console.log(state.items);
 });
