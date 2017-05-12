@@ -17,13 +17,16 @@ function deleteItem(){
 
 function checkItem(state,item,element){
 	let isCompleted = findItem(state,item).completed;
-	if(isCompleted===true) {
+	if(isCompleted) {
 		element.removeClass('shopping-item__checked');
 		isCompleted=false;
+		console.log("WHAT IS HAPPENING");
 	} else {
 		element.addClass('shopping-item__checked');
 		isCompleted=true;
+		console.log("HEY"+ isCompleted);
 	}
+	return isCompleted;
 }
 
 
@@ -82,7 +85,8 @@ function checkingList(state){
 	$('.shopping-list').on('click', '.shopping-item-toggle .button-label', function(event){
 		event.stopPropagation();
 		const item = $(this).closest('li').find('.shopping-item');
-		checkItem(state,item.text(),item);
+		console.log(item.text());
+		console.log(checkItem(state,item.text(),item));
 	});
 }
 //callback function
