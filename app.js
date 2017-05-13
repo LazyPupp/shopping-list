@@ -6,7 +6,7 @@ const state ={
 //add function
 function addItem(state, item){
 	if(!(findItem(state,item))){
-		state.items.push({item:item, completed:false});
+		state.items.push({item:item.toLowerCase(), completed:false});
 	}
 	return state.items;
 }
@@ -45,7 +45,7 @@ function findItemIndex(state, item){
 // console.log("items"+state.items);
 //finds item
 function findItem(state, item) {
-	return state.items.find(element =>element.item.trim() === item.trim());
+	return state.items.find(element =>element.item.trim().toLowerCase() === item.trim().toLowerCase());
 }
 
 //render state
@@ -59,6 +59,19 @@ function addRemCheck(state,item,element){
 		element.removeClass('shopping-item__checked');
 	}
 }
+
+// function searchedItem(state, input, element) {
+//   element.removeClass('hidden');
+// //   state.items.forEach(el => {
+// // 	  if(!el.item.includes(input)) {
+// // 	// if(!element.text().includes(input)) {
+// // 	  element.addClass('hidden');
+// // 	}
+// //   });
+// //   if() {
+
+// //   }
+// }
 
 
 //add
@@ -77,6 +90,8 @@ function renderList(state,element){
       	</li>`);
 	element.html(arr);
 }
+
+
 //delete
 function renderDelete(state,element){
 	element.remove();
@@ -84,9 +99,10 @@ function renderDelete(state,element){
 //event listeners
 function addItemToList(state){
 	$("#js-shopping-list-form").on('submit',function(event){
-	 	event.preventDefault();
+	 	event.preventDefault(); 
 	 	addItem(state,$("#shopping-list-entry").val());
 	 	renderList(state,$(".shopping-list"));
+		$('#shopping-list-entry').val('');
 	});
 
 }
@@ -103,13 +119,33 @@ function deleteItemFromList(state){
 		const list = $(this).closest('li');
 		deleteItem(state,list.find('.shopping-item').text());
 		renderDelete(state,list);
-
 	});
 }
+
+function showHideChecked(state) {
+	$('.show-hide').click(function(event) {
+	  event.preventDefault();
+	  $('.shopping-item__checked').closest('li').toggleClass('hidden');
+	});
+}
+
+function searchForItem(state) {
+  $('#js-shopping-list-form').on('click', '.search-item', function(event) {
+	  event.preventDefault();
+	  $('.shopping-list li').filter(function() {
+		 console.log($('.shopping-item').toArray());
+		//  .includes($('#shopping-list-query').val()));
+	  });
+  });
+}
+
+
 //callback function
 $(function(){
 	addItemToList(state);
 	checkingList(state);
 	deleteItemFromList(state);
+	showHideChecked(state);
+	searchForItem(state);
 	console.log(state.items);
 });
